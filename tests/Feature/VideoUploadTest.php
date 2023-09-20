@@ -17,7 +17,30 @@ class VideoUploadTest extends TestCase
     {
         Storage::fake('public');
 
-        $videoFile = UploadedFile::fake()->create('video.mp4', 1000);
+        // 1000000KB = 1GB
+        $videoFile = UploadedFile::fake()->create('video.mp4', 1000000);
+
+        $response = $this->post('/api/upload-video', [
+            'file' => $videoFile,
+        ]);
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure([
+            'full_path',
+            'path',
+            'name',
+            'mime_type',
+        ]);
+    }
+
+    public function testVideoUpload10gb(): void
+    {
+        Storage::fake('public');
+        //Upload file create, takes a KB on second parameter 1000000KB = 1GB
+        $tenGB = 1000000 * 10;
+
+        $videoFile = UploadedFile::fake()->create('video.mp4', $tenGB);
 
         $response = $this->post('/api/upload-video', [
             'file' => $videoFile,
@@ -35,15 +58,13 @@ class VideoUploadTest extends TestCase
 
     public function testVideoUploadValidation(): void
     {
-        Storage::fake('public');
-
         $response = $this->post('/api/upload-video', [
-            'file' => UploadedFile::fake()->image('avatar.jpg'),
+            'file' => null,
         ]);
 
         $response->assertStatus(302)
             ->assertSessionHasErrors([
-                'file' => 'The file field must be a file of type: mp4, avi, mov, wm.',
+                'file' => 'The file field is required.',
             ]);
     }
 
