@@ -68,7 +68,7 @@ class VideoUploadTest extends TestCase
             ]);
     }
 
-    //Not sure if we also needed mock testing but this one is example
+    //Not sure if we also needed mock service for testing but this one is example
     public function testVideoUploadWithMockService()
     {
         $this->mock(VideoUploadService::class, function (MockInterface $mock) {
