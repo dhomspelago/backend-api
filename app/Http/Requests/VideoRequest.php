@@ -14,7 +14,7 @@ class VideoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['required', 'mimes:mp4,avi,mov,wm']
+            'file' => ['required'],
         ];
     }
 }
