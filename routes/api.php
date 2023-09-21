@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('upload-video', [VideoController::class, 'upload'])->name('api.files.upload.large');
+Route::post('upload-video', [VideoController::class, 'upload'])->withoutMiddleware("throttle:api")->name('api.files.upload.large');
